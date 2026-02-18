@@ -8,6 +8,11 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/behaviors.h>
 
+#define L_DEFAULT 0
+#define L_SYMBOL 1
+#define L_NUMBER 2
+#define L_QWERTY 3
+
 / {
     chosen {
         zmk,physical-layout = &foostan_corne_6col_layout;
@@ -22,6 +27,12 @@
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&none>, <&none>, <&bt BT_CLR>;
+        };
+        td_tog_qwerty: tap_dance_toggle_qwerty {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&none>, <&none>, <&tog L_QWERTY>;
         };
         mt: mod_tap {
             quick-tap-ms = <150>;
@@ -40,24 +51,33 @@
                 &kp LALT   &kp Q &kp D &kp R &kp W &kp B   &kp J &kp F  &kp U     &kp P   &kp SEMI &mt RALT BSLH
                 &kp SQT    &kp A &kp S &kp H &kp T &kp G   &kp Y &kp N  &kp E     &kp O   &kp I    &kp SQT
                 &kp LSHFT  &kp Z &kp X &kp M &kp C &kp V   &kp K &kp L  &kp COMMA &kp DOT &kp FSLH &kp MINUS
-                   &mt LCTRL DEL &mt LGUI ESC &lt 1 BKSP   &lt 2 SPACE &mt RGUI RET &mt RCTRL TAB
+            &mt LCTRL DEL &mt LGUI ESC &lt L_SYMBOL BKSP   &lt L_NUMBER SPACE &mt RGUI RET &mt RCTRL TAB
             >;
         };
-        lower_layer { // l1
+        symbol_layer { // l1
             bindings = <
-                                                  &trans &trans &trans   &kp EQUAL &kp SEMI &trans
                 &trans &kp EXCL  &kp AT    &kp LBRC &kp RBRC &kp PIPE    &trans   &trans    &trans   &trans   &trans    &bt BT_SEL 0
                 &trans &kp HASH  &kp DLLR  &kp LPAR &kp RPAR &kp GRAVE   &kp PLUS &kp MINUS &kp FSLH &kp STAR &kp PRCNT &td_bt_clr
                 &trans &kp PRCNT &kp CARET &kp LBKT &kp RBKT &kp TILDE   &kp AMPS &kp EQUAL &trans   &trans   &trans    &bt BT_SEL 1
+                                                  &trans &trans &trans   &kp EQUAL &kp SEMI &td_tog_qwerty
             >;
         };
 
-        raise_layer { // l2
+        number_layer { // l2
             bindings = <
                  &trans &kp N1 &kp N2 &kp N3  &kp N4  &kp N5    &kp N6     &kp N7     &kp N8   &kp N9     &kp N0 &kp C_VOL_UP
                  &kp F1 &kp F2 &kp F3 &kp F4  &none   &kp F6    &kp LEFT   &kp DOWN   &kp UP   &kp RIGHT  &trans &kp C_MUTE
                  &kp F7 &kp F8 &kp F9 &kp F10 &kp F11 &kp F12   &kp C_PREV &kp C_STOP &kp C_PP &kp C_NEXT &trans &kp C_VOL_DN
                                        &trans &trans &kp SEMI   &trans &trans &kp PSCRN
+            >;
+        };
+
+        qwerty_layer { // l3
+            bindings = <
+                &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
+                &kp LCTRL &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
+                &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp ESC
+                      &kp LGUI &td_tog_qwerty &kp SPACE   &kp RET &td_tog_qwerty &kp RALT
             >;
         };
     };
